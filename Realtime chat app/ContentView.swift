@@ -10,8 +10,24 @@ import SwiftUI
 import Firebase
 
 struct ContentView: View {
+    
+    @State var status = UserDefaults.standard.value(forKey: "status") as? Bool ??  false
+    
     var body: some View {
-        Text("Hello, World!")
+        VStack{
+            if status{
+                Home()
+            }else{
+                NavigationView{
+                    Getnumber()
+                }
+            }
+        }.onAppear{
+            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "statusChange"), object: nil, queue: .main) { (_) in
+                let status = UserDefaults.standard.value(forKey: "status") as? Bool ??  false
+                self.status = status
+            }
+        }
     }
 }
 
@@ -97,34 +113,82 @@ struct Verify : View {
     @State var verificationcode = ""
     
     var body : some View{
-        VStack(spacing: 20){
+        
+        ZStack(alignment: .topLeading){
             
-            Image("images")
-            
-            Text("Welcome!")
-            .font(.largeTitle)
-            .fontWeight(.heavy)
-            
-            Text("Please enter your verification number")
-                .font(.body)
-                .foregroundColor(Color.gray)
-                .padding(.bottom,40)
+            VStack(spacing: 20){
                 
-            TextField("Code",text: $verificationcode)
-            .keyboardType(.numberPad)
-            .padding()
-            .background(Color("Color"))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .padding()
+                Image("images")
                 
+                Text("Welcome!")
+                .font(.largeTitle)
+                .fontWeight(.heavy)
+                
+                Text("Please enter your verification number")
+                    .font(.body)
+                    .foregroundColor(Color.gray)
+                    .padding(.bottom,40)
+                    
+                TextField("Code",text: $verificationcode)
+                .keyboardType(.numberPad)
+                .padding()
+                .background(Color("Color"))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding()
+                    
+                Button(action: {
+                 
+                 let credential = PhoneAuthProvider.provider().credential(withVerificationID: self.ID, verificationCode: self.verificationcode)
+                 
+                 Auth.auth().signIn(with: credential) { (res, err) in
+                     if err != nil{
+                         self.msg = (err?.localizedDescription)!
+                         self.alert.toggle()
+                         return
+                     }
+                     
+                     UserDefaults.standard.set(true, forKey: "status")
+                     NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
+                     
+                 }
+                 
+                 
+                }){
+                    Text("Verify")
+                        .frame(width: 380, height: 50)
+                    
+                }.foregroundColor(.white)
+                .background(Color.orange)
+                .cornerRadius(10)
+                .navigationBarTitle("")
+                .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
+            }
+            
             Button(action: {
-                
+                self.show.toggle()
             }){
-                Text("Verify")
-                .frame(width: 380, height: 50)
-            }.foregroundColor(.white)
-            .background(Color.blue)
-            .cornerRadius(10)
+                Image(systemName: "chevron.left")
+                
+            }.foregroundColor(Color.blue)
+            
+        }.padding()
+        
+    }
+    
+}
+
+struct Home : View {
+    var body: some View{
+        Button(action:{
+            
+            try! Auth.auth().signOut()
+            
+            UserDefaults.standard.set(false, forKey: "status")
+            NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
+        }){
+            Text("Logout")
         }
     }
 }
+
