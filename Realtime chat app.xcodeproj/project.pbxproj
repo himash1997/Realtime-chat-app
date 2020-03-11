@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -50,7 +50,6 @@
 				B7687A6ED8E0B0E160F9A6E5 /* Pods-Realtime chat app.debug.xcconfig */,
 				6FF92470C770EF30A9FE75B1 /* Pods-Realtime chat app.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

@@ -7,16 +7,11 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct ContentView: View {
     var body: some View {
         Text("Hello, World!")
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        Verify()
     }
 }
 
@@ -60,14 +55,33 @@ struct Getnumber : View {
                 
             }.padding()
             
-            Button(action: {
-                
-            }){
-                Text("Send")
-                .frame(width: 380, height: 50)
-            }.foregroundColor(.white)
-            .background(Color.blue)
-            .cornerRadius(10)
+            
+            NavigationLink(destination: Verify(show: $show, ID: $ID), isActive: $show){
+                Button(action: {
+                    PhoneAuthProvider.provider().verifyPhoneNumber("+"+self.code + self.number, uiDelegate: nil) { (ID, err) in
+                        if err != nil{
+                            self.msg = (err?.localizedDescription)!
+                            self.alert.toggle()
+                            return
+                        }
+                        self.ID = ID!
+                        self.show.toggle()
+                    }
+                    
+                }){
+                    Text("Send")
+                    .frame(width: 350, height: 50)
+                    
+                }.foregroundColor(.white)
+                .background(Color.orange)
+                .cornerRadius(10)
+                .navigationBarTitle("")
+                .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
+            }
+            }.padding()
+            .alert(isPresented: $alert) {
+                Alert(title: Text("Error"), message: Text(self.msg), dismissButton: .default(Text("Ok")))
         }
     }
 }
@@ -75,8 +89,8 @@ struct Getnumber : View {
 
 struct Verify : View {
     
-//    @Binding var show : Bool
-//    @Binding var ID : String
+    @Binding var show : Bool
+    @Binding var ID : String
     
     @State var msg = ""
     @State var alert = false
