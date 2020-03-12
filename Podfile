@@ -7,5 +7,7 @@ target 'Realtime chat app' do
 
   # Pods for Realtime chat app
   pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
+  pod 'Firebase/Storage'
 
 end
