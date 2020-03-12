@@ -156,7 +156,7 @@ struct Verify : View {
                     }else{
                         Button(action: {
                          
-                         self.creation.toggle()
+                         self.loading.toggle()
                             
                          let credential = PhoneAuthProvider.provider().credential(withVerificationID: self.ID, verificationCode: self.verificationcode)
                          
@@ -165,6 +165,7 @@ struct Verify : View {
                                  self.msg = (err?.localizedDescription)!
                                  self.alert.toggle()
                                  self.loading.toggle()
+                                
                                  return
                              }
                              
