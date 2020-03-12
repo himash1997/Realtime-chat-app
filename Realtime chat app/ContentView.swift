@@ -20,7 +20,7 @@ struct ContentView: View {
             }else{
                 NavigationView{
                     Getnumber()
-                }
+                }.navigationViewStyle(StackNavigationViewStyle())
             }
         }.onAppear{
             NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "statusChange"), object: nil, queue: .main) { (_) in
@@ -42,9 +42,13 @@ struct Getnumber : View {
     
     var body: some View{
         
-        VStack(spacing: 20){
+        VStack(){
             
             Image("images")
+                .resizable()
+                .scaledToFill()
+                .frame(width:100, height:100)
+                .clipped()
             
             Text("Welcome!")
             .font(.largeTitle)
@@ -117,9 +121,14 @@ struct Verify : View {
         
         ZStack(alignment: .topLeading){
             GeometryReader{_ in
-                VStack(spacing: 20){
+                VStack(){
                            
                        Image("images")
+                       .resizable()
+                       .scaledToFill()
+                       .frame(width:100, height:100)
+                       .clipped()
+                    
                        Text("Verification Code")
                            .font(.largeTitle)
                            .fontWeight(.heavy)
