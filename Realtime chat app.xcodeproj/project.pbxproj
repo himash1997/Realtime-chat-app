@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		E7AF181FC5ACB7065A9A7F7C /* Pods_Realtime_chat_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A4886902BD7181C73ABAB18 /* Pods_Realtime_chat_app.framework */; };
+		F32873EB241AB07400AFCCB9 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873EA241AB07400AFCCB9 /* ImagePicker.swift */; };
+		F32873ED241AB11500AFCCB9 /* AccountCreation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873EC241AB11500AFCCB9 /* AccountCreation.swift */; };
+		F32873EF241AB1DE00AFCCB9 /* Verify.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873EE241AB1DE00AFCCB9 /* Verify.swift */; };
+		F32873F1241AB23B00AFCCB9 /* Getnumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873F0241AB23B00AFCCB9 /* Getnumber.swift */; };
+		F32873F3241AB2D000AFCCB9 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873F2241AB2D000AFCCB9 /* Home.swift */; };
+		F32873F5241AB31900AFCCB9 /* Indicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873F4241AB31900AFCCB9 /* Indicator.swift */; };
+		F32873F7241AB3A400AFCCB9 /* checkUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873F6241AB3A400AFCCB9 /* checkUser.swift */; };
+		F32873F9241AB40300AFCCB9 /* createUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873F8241AB40300AFCCB9 /* createUser.swift */; };
 		F387F9F82418F570001D3FB5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F387F9F72418F570001D3FB5 /* AppDelegate.swift */; };
 		F387F9FA2418F570001D3FB5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F387F9F92418F570001D3FB5 /* SceneDelegate.swift */; };
 		F387F9FC2418F570001D3FB5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F387F9FB2418F570001D3FB5 /* ContentView.swift */; };
@@ -21,6 +29,14 @@
 		1A4886902BD7181C73ABAB18 /* Pods_Realtime_chat_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Realtime_chat_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FF92470C770EF30A9FE75B1 /* Pods-Realtime chat app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Realtime chat app.release.xcconfig"; path = "Target Support Files/Pods-Realtime chat app/Pods-Realtime chat app.release.xcconfig"; sourceTree = "<group>"; };
 		B7687A6ED8E0B0E160F9A6E5 /* Pods-Realtime chat app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Realtime chat app.debug.xcconfig"; path = "Target Support Files/Pods-Realtime chat app/Pods-Realtime chat app.debug.xcconfig"; sourceTree = "<group>"; };
+		F32873EA241AB07400AFCCB9 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		F32873EC241AB11500AFCCB9 /* AccountCreation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCreation.swift; sourceTree = "<group>"; };
+		F32873EE241AB1DE00AFCCB9 /* Verify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verify.swift; sourceTree = "<group>"; };
+		F32873F0241AB23B00AFCCB9 /* Getnumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Getnumber.swift; sourceTree = "<group>"; };
+		F32873F2241AB2D000AFCCB9 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		F32873F4241AB31900AFCCB9 /* Indicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Indicator.swift; sourceTree = "<group>"; };
+		F32873F6241AB3A400AFCCB9 /* checkUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = checkUser.swift; sourceTree = "<group>"; };
+		F32873F8241AB40300AFCCB9 /* createUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = createUser.swift; sourceTree = "<group>"; };
 		F387F9F42418F570001D3FB5 /* Realtime chat app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Realtime chat app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F387F9F72418F570001D3FB5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F387F9F92418F570001D3FB5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,6 +77,28 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		F32873E8241AB02F00AFCCB9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F32873F6241AB3A400AFCCB9 /* checkUser.swift */,
+				F32873F8241AB40300AFCCB9 /* createUser.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F32873E9241AB05100AFCCB9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F32873EA241AB07400AFCCB9 /* ImagePicker.swift */,
+				F32873EC241AB11500AFCCB9 /* AccountCreation.swift */,
+				F32873EE241AB1DE00AFCCB9 /* Verify.swift */,
+				F32873F0241AB23B00AFCCB9 /* Getnumber.swift */,
+				F32873F2241AB2D000AFCCB9 /* Home.swift */,
+				F32873F4241AB31900AFCCB9 /* Indicator.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		F387F9EB2418F570001D3FB5 = {
 			isa = PBXGroup;
 			children = (
@@ -82,6 +120,8 @@
 		F387F9F62418F570001D3FB5 /* Realtime chat app */ = {
 			isa = PBXGroup;
 			children = (
+				F32873E9241AB05100AFCCB9 /* Views */,
+				F32873E8241AB02F00AFCCB9 /* Model */,
 				F387F9F72418F570001D3FB5 /* AppDelegate.swift */,
 				F387F9F92418F570001D3FB5 /* SceneDelegate.swift */,
 				F387F9FB2418F570001D3FB5 /* ContentView.swift */,
@@ -218,8 +258,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F32873ED241AB11500AFCCB9 /* AccountCreation.swift in Sources */,
 				F387F9F82418F570001D3FB5 /* AppDelegate.swift in Sources */,
+				F32873EB241AB07400AFCCB9 /* ImagePicker.swift in Sources */,
 				F387F9FA2418F570001D3FB5 /* SceneDelegate.swift in Sources */,
+				F32873F9241AB40300AFCCB9 /* createUser.swift in Sources */,
+				F32873F1241AB23B00AFCCB9 /* Getnumber.swift in Sources */,
+				F32873F7241AB3A400AFCCB9 /* checkUser.swift in Sources */,
+				F32873EF241AB1DE00AFCCB9 /* Verify.swift in Sources */,
+				F32873F3241AB2D000AFCCB9 /* Home.swift in Sources */,
+				F32873F5241AB31900AFCCB9 /* Indicator.swift in Sources */,
 				F387F9FC2418F570001D3FB5 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
