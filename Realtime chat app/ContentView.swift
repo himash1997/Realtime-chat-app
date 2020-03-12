@@ -32,6 +32,12 @@ struct ContentView: View {
     }
 }
 
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AccountCreation()
+//    }
+//}
+
 struct Getnumber : View {
     
     @State var number = ""
@@ -95,7 +101,7 @@ struct Getnumber : View {
                     .frame(width: 350, height: 50)
                     
                 }.foregroundColor(.white)
-                .background(Color.orange)
+                .background(Color.blue)
                 .cornerRadius(10)
                 .navigationBarTitle("")
                 .navigationBarHidden(true)
@@ -189,7 +195,7 @@ struct Verify : View {
                                 .frame(width: 380, height: 50)
                             
                         }.foregroundColor(.white)
-                        .background(Color.orange)
+                        .background(Color.blue)
                         .cornerRadius(10)
                     }
                            
@@ -201,7 +207,7 @@ struct Verify : View {
                        }){
                            Image(systemName: "chevron.left")
                            
-                       }.foregroundColor(Color.orange)
+                       }.foregroundColor(Color.blue)
             
         }.padding()
         .navigationBarTitle("")
@@ -240,9 +246,193 @@ struct AccountCreation: View {
     
     @Binding var show: Bool
     
+    @State var name = ""
+    @State var about = ""
+    @State var picker = false
+    @State var loading = false
+    @State var imagedata : Data = .init(count: 0)
+    @State var alert = false
+    
     var body: some View{
-        Text("Account create")
+        
+        VStack(){
+            Text("Creation An Account")
+                .font(.title)
+            
+            HStack{
+                Spacer()
+                Button(action: {
+                    
+                    self.picker.toggle()
+                    
+                }){
+                    
+                    if self.imagedata.count == 0{
+                        Image(systemName: "person.crop.circle.badge.plus")
+                        .resizable()
+                        .frame(width: 90, height: 70)
+                        .foregroundColor(Color.gray)
+                    }else{
+                        Image(uiImage: UIImage(data: self.imagedata)!)
+                        .resizable()
+                        .renderingMode(.original)
+                        .frame(width:90 ,height: 90)
+                        .clipShape(Circle())
+                        
+                    }
+                
+                }
+                Spacer()
+            }
+            //.padding(.vertical, 30)
+            
+            VStack(alignment: .leading, spacing: 20){
+                Text("Enter User Name")
+                    .font(.body)
+                    .foregroundColor(Color.gray)
+                
+                TextField("Name",text: self.$name)
+                    .padding()
+                    .background(Color("Color"))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                
+                Text("About You")
+                    .font(.body)
+                    .foregroundColor(Color.gray)
+                
+                TextField("About",text: self.$about)
+                    .padding()
+                    .background(Color("Color"))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                
+            }.padding()
+            
+            if self.loading{
+                HStack{
+                    Spacer()
+                    Indicator()
+                    Spacer()
+                }
+            }else{
+                
+                Button(action:{
+                    
+                    if self.name != "" && self.about != "" && self.imagedata.count != 0{
+                        
+                        self.loading.toggle()
+                        createUser(name: self.name, about: self.about, imagedata: self.imagedata) { (status) in
+                            if status{
+                                self.show.toggle()
+                            }
+                        }
+                        
+                    }else{
+                        self.alert.toggle()
+                    }
+                    
+               }){
+               Text("Create Account")
+                   .frame(width: 350, height: 50)
+                   
+               }.foregroundColor(.white)
+               .background(Color.blue)
+               .cornerRadius(10)
+    
+            }
+            
+        }.padding()
+            .sheet(isPresented: self.$picker, content: {
+                ImagePicker(picker: self.$picker, imagedata: self.$imagedata)
+            })
+            .alert(isPresented: self.$alert) {
+                Alert(title: Text("Message"), message: Text("Please Fill The Contents"), dismissButton: .default(Text("Ok")))
+        }
     }
+}
+
+struct ImagePicker: UIViewControllerRepresentable {
+    
+    @Binding var picker : Bool
+    @Binding var imagedata : Data
+    
+    func makeCoordinator() -> ImagePicker.Coordinator {
+        return ImagePicker.Coordinator(parent1: self)
+    }
+    
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.sourceType = .photoLibrary
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<ImagePicker>) {
+        
+    }
+    
+    class Coordinator : NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+        
+        var parent : ImagePicker
+        
+        init(parent1 : ImagePicker) {
+            parent = parent1
+        }
+        
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            self.parent.picker.toggle()
+        }
+        
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            
+            let image = info[.originalImage] as! UIImage
+            let data = image.jpegData(compressionQuality: 0.45)
+            self.parent.imagedata = data!
+            self.parent.picker.toggle()
+            
+        }
+        
+    }
+    
+}
+
+func createUser(name : String, about: String, imagedata: Data, completion: @escaping(Bool)->Void){
+    
+    let db = Firestore.firestore()
+    let storage = Storage.storage().reference()
+    
+    let uid = Auth.auth().currentUser?.uid
+    
+    storage.child("profilepics").child(uid!).putData(imagedata, metadata: nil) { (_, err) in
+        
+        if err != nil{
+            print((err?.localizedDescription)!)
+            return
+        }
+        
+        storage.child("profilepics").child(uid!).downloadURL { (url, err) in
+            if err != nil{
+                print((err?.localizedDescription)!)
+                return
+            }
+            
+            db.collection("users").document(uid!).setData(["name":name,"about":about,"pic":"\(url!)","uid":uid!]) { (err) in
+                if err != nil{
+                    print((err?.localizedDescription)!)
+                    return
+                }
+                
+                completion(true)
+                
+                UserDefaults.standard.set(true, forKey: "status")
+                UserDefaults.standard.set(name, forKey: "UserName")
+                NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
+                
+            }
+            
+        }
+        
+    }
+    
 }
 
 
