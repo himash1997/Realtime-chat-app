@@ -23,62 +23,73 @@ struct Home : View {
     
     var body: some View{
         
-        VStack{
-
-            if self.data.recents.count == 0{
-
-                    Indicator()
-
+        ZStack{
+            NavigationLink(destination: ChatView(name: self.name, pic: self.pic, uid: self.uid, chat: self.$chat), isActive: self.$chat) {
+                Text("")
             }
-            else{
+            
+            VStack{
 
-                ScrollView(.vertical, showsIndicators: false) {
+                       if self.data.recents.count == 0{
+                               Indicator()
+                       }
+                       else{
+                           ScrollView(.vertical, showsIndicators: false) {
+                               VStack(spacing: 12){
+                                   
+                                   ForEach(data.recents){i in
+                                    Button(action: {
+                                        
+                                        self.uid = i.id
+                                        self.name = i.name
+                                        self.pic = i.pic
+                                        self.chat.toggle()
+                                        
+                                    }) {
+                                        RecentCellView(url: i.pic, name: i.name, time: i.time, date: i.date, lastmsg: i.lastmsg)
+                                    }
+                                   }
+                                   
+                               }.padding()
+                           }
+                       }
+                   }.navigationBarTitle("Home",displayMode: .inline)
+                     .navigationBarItems(leading:
 
-                    VStack(spacing: 12){
+                         Button(action: {
 
-                        ForEach(data.recents){i in
+                           UserDefaults.standard.set("", forKey: "UserName")
+                           UserDefaults.standard.set("", forKey: "UID")
+                           UserDefaults.standard.set("", forKey: "pic")
 
-                            RecentCellView(url: i.pic, name: i.name, time: i.time, date: i.date, lastmsg: i.lastmsg)
+                           try! Auth.auth().signOut()
 
-                        }
+                           UserDefaults.standard.set(false, forKey: "status")
 
-                    }.padding()
-                }
-            }
-        }.navigationBarTitle("Home",displayMode: .inline)
-          .navigationBarItems(leading:
+                           NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
 
-              Button(action: {
+                         }, label: {
 
-                UserDefaults.standard.set("", forKey: "UserName")
-                UserDefaults.standard.set("", forKey: "UID")
-                UserDefaults.standard.set("", forKey: "pic")
+                             Text("Sign Out")
+                         })
 
-                try! Auth.auth().signOut()
+                         , trailing:
 
-                UserDefaults.standard.set(false, forKey: "status")
+                         Button(action: {
+                           
+                           self.show.toggle()
 
-                NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
+                         }, label: {
 
-              }, label: {
+                             Image(systemName: "square.and.pencil").resizable().frame(width: 25, height: 25)
+                         }
+                     )
 
-                  Text("Sign Out")
-              })
-
-              , trailing:
-
-              Button(action: {
-                
-                self.show.toggle()
-
-              }, label: {
-
-                  Image(systemName: "square.and.pencil").resizable().frame(width: 25, height: 25)
-              }
-          )
-
-        ).sheet(isPresented: self.$show) {
-            NewChatView()
+                )
+            
+        }
+       .sheet(isPresented: self.$show) {
+        NewChatView(name: self.$name, uid: self.$uid, pic: self.$pic, show: self.$show, chat: self.$chat)
         }
     }
 }
@@ -103,6 +114,7 @@ struct RecentCellView: View{
                 HStack{
                     VStack(alignment: .leading, spacing: 6){
                         Text(name)
+                            .foregroundColor(.black)
                         Text(lastmsg)
                             .foregroundColor(.gray)
                     }
@@ -125,6 +137,11 @@ struct RecentCellView: View{
 struct NewChatView : View {
     
     @ObservedObject var data = GetAllUsers()
+    @Binding var name : String
+    @Binding var uid : String
+    @Binding var pic : String
+    @Binding var show : Bool
+    @Binding var chat : Bool
     
     var body : some View{
         VStack(alignment: .leading){
@@ -135,7 +152,7 @@ struct NewChatView : View {
                 .font(.title)
                 .foregroundColor(Color.black.opacity(0.5))
                 .padding()
-
+                
                 if self.data.users.count == 0{
 
                         Indicator()
@@ -227,6 +244,30 @@ struct UserCellView: View{
                 Divider()
             }
             
+        }
+    }
+}
+
+struct ChatView: View {
+    
+    var name : String
+    var pic : String
+    var uid : String
+    @Binding var chat : Bool
+    
+    var body: some View{
+        VStack{
+            Text("Hello")
+                .navigationBarTitle("\(name)", displayMode: .inline)
+            .navigationBarItems(leading:
+                Button(action: {
+                    self.chat.toggle()
+                }, label: {
+                    Image(systemName: "arrow.left")
+                    .resizable()
+                    .frame(width: 20, height: 15)
+                })
+            )
         }
     }
 }
