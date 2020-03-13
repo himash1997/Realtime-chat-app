@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,6 +16,7 @@
 		F32873F5241AB31900AFCCB9 /* Indicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873F4241AB31900AFCCB9 /* Indicator.swift */; };
 		F32873F7241AB3A400AFCCB9 /* checkUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873F6241AB3A400AFCCB9 /* checkUser.swift */; };
 		F32873F9241AB40300AFCCB9 /* createUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32873F8241AB40300AFCCB9 /* createUser.swift */; };
+		F32873FC241B321400AFCCB9 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = F32873FB241B321400AFCCB9 /* SDWebImageSwiftUI */; };
 		F387F9F82418F570001D3FB5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F387F9F72418F570001D3FB5 /* AppDelegate.swift */; };
 		F387F9FA2418F570001D3FB5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F387F9F92418F570001D3FB5 /* SceneDelegate.swift */; };
 		F387F9FC2418F570001D3FB5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F387F9FB2418F570001D3FB5 /* ContentView.swift */; };
@@ -53,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F32873FC241B321400AFCCB9 /* SDWebImageSwiftUI in Frameworks */,
 				E7AF181FC5ACB7065A9A7F7C /* Pods_Realtime_chat_app.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -160,6 +162,9 @@
 			dependencies = (
 			);
 			name = "Realtime chat app";
+			packageProductDependencies = (
+				F32873FB241B321400AFCCB9 /* SDWebImageSwiftUI */,
+			);
 			productName = "Realtime chat app";
 			productReference = F387F9F42418F570001D3FB5 /* Realtime chat app.app */;
 			productType = "com.apple.product-type.application";
@@ -188,6 +193,9 @@
 				Base,
 			);
 			mainGroup = F387F9EB2418F570001D3FB5;
+			packageReferences = (
+				F32873FA241B321400AFCCB9 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+			);
 			productRefGroup = F387F9F52418F570001D3FB5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -462,6 +470,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F32873FA241B321400AFCCB9 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F32873FB241B321400AFCCB9 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F32873FA241B321400AFCCB9 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F387F9EC2418F570001D3FB5 /* Project object */;
 }

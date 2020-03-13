@@ -40,6 +40,9 @@ func createUser(name : String, about: String, imagedata: Data, completion: @esca
                 
                 UserDefaults.standard.set(true, forKey: "status")
                 UserDefaults.standard.set(name, forKey: "UserName")
+                UserDefaults.standard.set(uid, forKey: "UID")
+                UserDefaults.standard.set("\(url!)", forKey: "UserName")
+                
                 NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
                 
             }
