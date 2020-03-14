@@ -48,8 +48,7 @@ struct Home : View {
                                     }) {
                                         RecentCellView(url: i.pic, name: i.name, time: i.time, date: i.date, lastmsg: i.lastmsg)
                                     }
-                                   }
-                                   
+                                  }
                                }.padding()
                            }
                        }
@@ -255,10 +254,43 @@ struct ChatView: View {
     var uid : String
     @Binding var chat : Bool
     
+    @State var msgs = [Msg]()
+    @State var txt = ""
+    
     var body: some View{
+        
         VStack{
-            Text("Hello")
-                .navigationBarTitle("\(name)", displayMode: .inline)
+            
+            if msgs.count == 0{
+                
+                Spacer()
+                Indicator()
+                Spacer()
+                
+            }else{
+                ScrollView(.vertical, showsIndicators: false){
+                    VStack{
+                        ForEach(self.msgs){i in
+                            Text(i.msg)
+                        }
+                    }
+                }
+            }
+            
+            HStack{
+                
+                TextField("Enter Message", text: self.$txt)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                Button(action: {
+                    
+                }){
+                    Text("Send")
+                }
+                
+            }
+            
+            .navigationBarTitle("\(name)", displayMode: .inline)
             .navigationBarItems(leading:
                 Button(action: {
                     self.chat.toggle()
@@ -268,6 +300,34 @@ struct ChatView: View {
                     .frame(width: 20, height: 15)
                 })
             )
+        }.padding()
+    }
+    
+    func getMsgs(){
+        let db = Firestore.firestore()
+        let uid = Auth.auth().currentUser?.uid
+        
+        db.collection("msgs").document(uid!).collection(self.uid).getDocuments { (snap, err) in
+            if err != nil{
+                print((err?.localizedDescription)!)
+                return
+            }
+            
+            for i in snap!.documents{
+                let id = i.documentID
+                let msg = i.get("msg") as! String
+                let user = i.get("user") as! String
+                
+                self.msgs.append(Msg(id: id, msg: msg, user: user))
+            }
+            
         }
     }
+}
+
+
+struct Msg : Identifiable {
+    var id : String
+    var msg : String
+    var user : String
 }
