@@ -277,19 +277,18 @@ struct ChatView: View {
                                     
                                     Text(i.msg)
                                         .padding()
-                                        .background(Color.blue)
-                                        .opacity(0.5)
-                                        .foregroundColor(Color.black)
-                                        .cornerRadius(20)
-                                        .padding(5)
+                                        .background(Color("Color-1"))
+                                        .clipShape(ChatBubble(mymsg: true))
+                                        .foregroundColor(Color.white)
+                                        .padding(4)
                                     
                                 }else{
                                     Text(i.msg)
-                                    .foregroundColor(Color.white)
                                     .padding()
                                     .background(Color.blue)
-                                    .cornerRadius(20)
-                                    .padding(5)
+                                    .clipShape(ChatBubble(mymsg: true))
+                                    .foregroundColor(Color.white)
+                                    .padding(4)
                                     
                                     Spacer()
                                 }
@@ -358,4 +357,18 @@ struct Msg : Identifiable {
     var id : String
     var msg : String
     var user : String
+}
+
+
+struct ChatBubble : Shape {
+    
+    var mymsg: Bool
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topLeft,.topRight, mymsg ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width: 16, height: 16))
+        
+        return Path(path.cgPath)
+        
+    }
+    
 }
