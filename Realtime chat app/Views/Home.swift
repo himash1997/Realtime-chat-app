@@ -260,7 +260,6 @@ struct ChatView: View {
     var body: some View{
         
         VStack{
-            
             if msgs.count == 0{
                 
                 Spacer()
@@ -271,7 +270,31 @@ struct ChatView: View {
                 ScrollView(.vertical, showsIndicators: false){
                     VStack{
                         ForEach(self.msgs){i in
-                            Text(i.msg)
+                            
+                            HStack{
+                                if i.user == UserDefaults.standard.value(forKey: "UID") as! String{
+                                    Spacer()
+                                    
+                                    Text(i.msg)
+                                        .padding()
+                                        .background(Color.blue)
+                                        .opacity(0.5)
+                                        .foregroundColor(Color.black)
+                                        .cornerRadius(20)
+                                        .padding(5)
+                                    
+                                }else{
+                                    Text(i.msg)
+                                    .foregroundColor(Color.white)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .cornerRadius(20)
+                                    .padding(5)
+                                    
+                                    Spacer()
+                                }
+                            }
+                            
                         }
                     }
                 }
@@ -301,13 +324,17 @@ struct ChatView: View {
                 })
             )
         }.padding()
+            .onAppear(){
+                self.getMsgs()
+        }
     }
     
     func getMsgs(){
         let db = Firestore.firestore()
         let uid = Auth.auth().currentUser?.uid
         
-        db.collection("msgs").document(uid!).collection(self.uid).getDocuments { (snap, err) in
+        db.collection("msgs").document(uid!).collection(self.uid).order(by: "date", descending: false).getDocuments { (snap, err) in
+            
             if err != nil{
                 print((err?.localizedDescription)!)
                 return
@@ -318,9 +345,10 @@ struct ChatView: View {
                 let msg = i.get("msg") as! String
                 let user = i.get("user") as! String
                 
+//                print("\(id)" + ">>>>>" + "\(user)")
+                
                 self.msgs.append(Msg(id: id, msg: msg, user: user))
             }
-            
         }
     }
 }

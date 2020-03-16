@@ -67,7 +67,7 @@ class MainObservable: ObservableObject{
                 let stamp = i.document.get("date") as! Timestamp
                 
                 let formatter = DateFormatter()
-                formatter.dateFormat = "dd/MM/yy"
+                formatter.dateFormat = "dd/MM/yy" 
                 let date = formatter.string(from: stamp.dateValue())
                 
                 formatter.dateFormat = "hh:mm a"
