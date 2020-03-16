@@ -31,7 +31,14 @@ struct Home : View {
             VStack{
 
                        if self.data.recents.count == 0{
-                               Indicator()
+                               
+                            if self.data.norecent {
+                                Text("No Chat History")
+                                
+                            }else{
+                                Indicator()
+                        }
+                        
                        }
                        else{
                            ScrollView(.vertical, showsIndicators: false) {
@@ -167,6 +174,12 @@ struct NewChatView : View {
                                 
                                 Button(action: {
                                     
+                                    self.uid = i.id
+                                    self.name = i.name
+                                    self.pic = i.pic
+                                    self.show.toggle()
+                                    self.chat.toggle()
+                                    
                                 }, label: {
                                     UserCellView(url: i.pic, name: i.name, about: i.about)
                                 } )
@@ -267,6 +280,11 @@ struct ChatView: View {
                     Text("Start New Conversation")
                         .opacity(0.5)
                         .padding()
+                    Spacer()
+                }else{
+                    
+                    Spacer()
+                    Indicator()
                     Spacer()
                 }
                 

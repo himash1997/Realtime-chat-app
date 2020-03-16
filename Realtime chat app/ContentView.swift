@@ -45,6 +45,7 @@ struct ContentView: View {
 
 class MainObservable: ObservableObject{
     @Published var recents = [Recent]()
+    @Published var norecent = false
     
     init() {
         
@@ -55,7 +56,12 @@ class MainObservable: ObservableObject{
             
             if err != nil{
                 print("error >>>>" + (err?.localizedDescription)!)
+                self.norecent = true
                 return
+            }
+            
+            if snap!.isEmpty{
+                self.norecent = true
             }
             
             for i in snap!.documentChanges{
@@ -67,7 +73,7 @@ class MainObservable: ObservableObject{
                 let stamp = i.document.get("date") as! Timestamp
                 
                 let formatter = DateFormatter()
-                formatter.dateFormat = "dd/MM/yy" 
+                formatter.dateFormat = "dd/MM/yy"
                 let date = formatter.string(from: stamp.dateValue())
                 
                 formatter.dateFormat = "hh:mm a"
