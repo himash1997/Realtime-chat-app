@@ -358,7 +358,7 @@ struct ChatView: View {
         let db = Firestore.firestore()
         let uid = Auth.auth().currentUser?.uid
         
-        db.collection("msgs").document(uid!).collection(self.uid).order(by: "date", descending: false).getDocuments { (snap, err) in
+        db.collection("msgs").document(uid!).collection(self.uid).order(by: "date", descending: false).addSnapshotListener { (snap, err) in
             
             if err != nil{
                 print((err?.localizedDescription)!)
@@ -370,14 +370,15 @@ struct ChatView: View {
                 self.nomsg = true
             }
             
-            for i in snap!.documents{
-                let id = i.documentID
-                let msg = i.get("msg") as! String
-                let user = i.get("user") as! String
+            for i in snap!.documentChanges{
                 
-//                print("\(id)" + ">>>>>" + "\(user)")
-                
-                self.msgs.append(Msg(id: id, msg: msg, user: user))
+                if i.type == .added{
+                    let id = i.document.documentID
+                    let msg = i.document.get("msg") as! String
+                    let user = i.document.get("user") as! String
+                    
+                    self.msgs.append(Msg(id: id, msg: msg, user: user))
+                }
             }
         }
     }
@@ -436,13 +437,26 @@ func sendRecents(user: String, uid: String, pic: String, date :Date, msg : Strin
     let db = Firestore.firestore()
     let myuid = Auth.auth().currentUser?.uid
     
-    db.collection("users").document(myuid!).collection("recents").document(uid).setData(["name" : user, "pic":pic, "lastmsg":msg, "date": date]) { (err) in
+    let myname = UserDefaults.standard.value(forKey: "UserName") as! String
+    
+    let mypic = UserDefaults.standard.value(forKey: "pic") as! String
+    
+    db.collection("users").document(uid).collection("recents").document(myuid!).setData(["name":myname,"pic":mypic,"lastmsg":msg,"date":date]) { (err) in
         
         if err != nil{
+            
             print((err?.localizedDescription)!)
             return
         }
+    }
+    
+    db.collection("users").document(myuid!).collection("recents").document(uid).setData(["name":user,"pic":pic,"lastmsg":msg,"date":date]) { (err) in
         
+        if err != nil{
+            
+            print((err?.localizedDescription)!)
+            return
+        }
     }
     
     
