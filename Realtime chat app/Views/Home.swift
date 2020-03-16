@@ -213,7 +213,9 @@ class GetAllUsers : ObservableObject{
                 let pic = i.get("pic") as! String
                 let about = i.get("about") as! String
                 
-                self.users.append(User(id: id, name: name, pic: pic, about: about))
+                if id != UserDefaults.standard.value(forKey: "UID") as! String{
+                    self.users.append(User(id: id, name: name, pic: pic, about: about))
+                }
                 
             }
         }
@@ -327,6 +329,9 @@ struct ChatView: View {
                 
                 Button(action: {
                     
+                    sendMsg(user: self.name, uid: self.uid, pic: self.pic, date: Date() , msg: self.txt)
+                    self.txt = ""
+                    
                 }){
                     Text("Send")
                 }
@@ -397,4 +402,85 @@ struct ChatBubble : Shape {
         
     }
     
+}
+
+func sendMsg(user: String, uid: String, pic: String, date :Date, msg : String){
+    
+    let db = Firestore.firestore()
+    let myuid = Auth.auth().currentUser?.uid
+    
+    db.collection("user").document(uid).collection("recents").document(myuid!).getDocument { (snap, err) in
+        
+        if err != nil{
+            print((err?.localizedDescription)!)
+            return
+        }
+        
+        if snap!.exists{
+            
+            sendRecents(user: user, uid: uid, pic: pic, date: date, msg: msg)
+            
+        }else{
+            
+            updateRecents(uid: uid, date: date, lastmsg: msg)
+            
+        }
+    }
+    
+    updateDB(uid: uid, msg: msg, date: date)
+    
+}
+
+func sendRecents(user: String, uid: String, pic: String, date :Date, msg : String){
+    
+    let db = Firestore.firestore()
+    let myuid = Auth.auth().currentUser?.uid
+    
+    db.collection("users").document(myuid!).collection("recents").document(uid).setData(["name" : user, "pic":pic, "lastmsg":msg, "date": date]) { (err) in
+        
+        if err != nil{
+            print((err?.localizedDescription)!)
+            return
+        }
+        
+    }
+    
+    
+}
+
+func updateRecents(uid: String,date :Date, lastmsg : String){
+    
+    let db = Firestore.firestore()
+    let myuid = Auth.auth().currentUser?.uid
+    
+    db.collection("users").document(uid).collection("recents").document(myuid!).updateData(["lastmsg":lastmsg,"date":date])
+    db.collection("users").document(myuid!).collection("recents").document(uid).updateData(["lastmsg":lastmsg,"date":date])
+    
+    
+}
+
+
+func updateDB(uid: String,msg: String,date: Date){
+    
+    let db = Firestore.firestore()
+    
+    let myuid = Auth.auth().currentUser?.uid
+    
+    db.collection("msgs").document(uid).collection(myuid!).document().setData(["msg":msg,"user":myuid!,"date":date]) { (err) in
+        
+        if err != nil{
+            
+            print((err?.localizedDescription)!)
+            return
+        }
+    }
+    
+    db.collection("msgs").document(myuid!).collection(uid).document().setData(["msg":msg,"user":myuid!,"date":date]) { (err) in
+        
+        if err != nil{
+            
+            print((err?.localizedDescription)!)
+            return
+        }
+    }
 }
