@@ -256,15 +256,19 @@ struct ChatView: View {
     
     @State var msgs = [Msg]()
     @State var txt = ""
+    @State var nomsg = false
     
     var body: some View{
         
         VStack{
             if msgs.count == 0{
                 
-                Spacer()
-                Indicator()
-                Spacer()
+                if nomsg{
+                    Text("Start New Conversation")
+                        .opacity(0.5)
+                        .padding()
+                    Spacer()
+                }
                 
             }else{
                 ScrollView(.vertical, showsIndicators: false){
@@ -293,13 +297,12 @@ struct ChatView: View {
                                     Spacer()
                                 }
                             }
-                            
                         }
                     }
                 }
             }
             
-            HStack{
+            HStack(){
                 
                 TextField("Enter Message", text: self.$txt)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -336,7 +339,12 @@ struct ChatView: View {
             
             if err != nil{
                 print((err?.localizedDescription)!)
+                self.nomsg = true
                 return
+            }
+            
+            if snap!.isEmpty{
+                self.nomsg = true
             }
             
             for i in snap!.documents{
