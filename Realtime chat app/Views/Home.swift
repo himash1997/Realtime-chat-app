@@ -409,10 +409,7 @@ func sendMsg(user: String, uid: String, pic: String, date :Date, msg : String){
     
     let db = Firestore.firestore()
     let myuid = Auth.auth().currentUser?.uid
-    
-    print(uid)
-    print(myuid)
-    
+
     db.collection("users").document(uid).collection("recents").document(myuid!).getDocument { (snap, err) in
         
         if err != nil{
