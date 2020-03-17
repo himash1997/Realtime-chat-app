@@ -44,7 +44,7 @@ struct Home : View {
                            ScrollView(.vertical, showsIndicators: false) {
                                VStack(spacing: 12){
                                    
-                                   ForEach(data.recents){i in
+                                ForEach(data.recents.sorted(by: {$0.stamp > $1.stamp })){i in
                                     Button(action: {
                                         
                                         self.uid = i.id
@@ -67,11 +67,11 @@ struct Home : View {
                            UserDefaults.standard.set("", forKey: "UserName")
                            UserDefaults.standard.set("", forKey: "UID")
                            UserDefaults.standard.set("", forKey: "pic")
-
+                           
                            try! Auth.auth().signOut()
-
+                           
                            UserDefaults.standard.set(false, forKey: "status")
-
+                           
                            NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
 
                          }, label: {
@@ -110,12 +110,19 @@ struct RecentCellView: View{
     
     var body : some View{
         HStack{
-            AnimatedImage(url: URL(string: url)!)
-            .resizable()
-            .renderingMode(.original)
-            .frame(width: 55, height: 55)
-            .clipShape(Circle())
             
+            AnimatedImage(url: URL(string: url)!)
+                .resizable()
+                .renderingMode(.original)
+                .frame(width: 55, height: 55)
+                .clipShape(Circle())
+            
+//            AnimatedImage(url: URL(string: url)!)
+//            .resizable()
+//            .renderingMode(.original)
+//            .frame(width: 55, height: 55)
+//            .clipShape(Circle())
+//
             VStack{
                 HStack{
                     VStack(alignment: .leading, spacing: 6){
