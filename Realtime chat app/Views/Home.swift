@@ -410,7 +410,10 @@ func sendMsg(user: String, uid: String, pic: String, date :Date, msg : String){
     let db = Firestore.firestore()
     let myuid = Auth.auth().currentUser?.uid
     
-    db.collection("user").document(uid).collection("recents").document(myuid!).getDocument { (snap, err) in
+    print(uid)
+    print(myuid)
+    
+    db.collection("users").document(uid).collection("recents").document(myuid!).getDocument { (snap, err) in
         
         if err != nil{
             print((err?.localizedDescription)!)
@@ -418,13 +421,14 @@ func sendMsg(user: String, uid: String, pic: String, date :Date, msg : String){
             return
         }
         
-        if snap!.exists{
+        if !snap!.exists{
+            print("no recent")
             
             setRecents(user: user, uid: uid, pic: pic, date: date, msg: msg)
             
         }else{
-            
-            updateRecents(uid: uid, date: date, lastmsg: msg)
+             print("have recent")
+             updateRecents(uid: uid, date: date, lastmsg: msg)
             
         }
     }
@@ -440,7 +444,6 @@ func setRecents(user: String, uid: String, pic: String, date :Date, msg : String
     
     let myname = UserDefaults.standard.value(forKey: "UserName") as! String
     let mypic = UserDefaults.standard.value(forKey: "pic") as! String
-    
     db.collection("users").document(uid).collection("recents").document(myuid!).setData(["name":myname,"pic":mypic,"lastmsg":msg,"date":date]) { (err) in
         
         if err != nil{
