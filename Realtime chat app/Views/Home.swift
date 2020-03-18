@@ -269,7 +269,25 @@ struct UserCellView: View{
     }
 }
 
+struct GeometryGetter: View {
+    @Binding var rect: CGRect
+
+    var body: some View {
+        GeometryReader { geometry in
+            Group { () -> AnyView in
+                DispatchQueue.main.async {
+                    self.rect = geometry.frame(in: .global)
+                }
+
+                return AnyView(Color.clear)
+            }
+        }
+    }
+}
+
 struct ChatView: View {
+    
+    @ObservedObject private var kGuardian = KeyboardGuardian //KeyboardGuardian(textFieldCount: 1)
     
     var name : String
     var pic : String
@@ -333,6 +351,7 @@ struct ChatView: View {
                 
                 TextField("Enter Message", text: self.$txt)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .background(GeometryGetter(rect: $kGuardian.rects[0]))
                 
                 Button(action: {
                     
@@ -343,7 +362,7 @@ struct ChatView: View {
                     Text("Send")
                 }
                 
-            }
+            }.offset(y: kGuardian.slide).animation(.easeInOut(duration: 1.0))
             
             .navigationBarTitle("\(name)", displayMode: .inline)
             .navigationBarItems(leading:
