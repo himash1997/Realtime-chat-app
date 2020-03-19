@@ -269,25 +269,36 @@ struct UserCellView: View{
     }
 }
 
-struct GeometryGetter: View {
-    @Binding var rect: CGRect
+import SwiftUI
 
-    var body: some View {
-        GeometryReader { geometry in
-            Group { () -> AnyView in
-                DispatchQueue.main.async {
-                    self.rect = geometry.frame(in: .global)
-                }
+struct KeyboardResponsiveModifier: ViewModifier {
+  @State private var offset: CGFloat = 0
 
-                return AnyView(Color.clear)
-            }
+  func body(content: Content) -> some View {
+    content
+      .padding(.bottom, offset)
+      .onAppear {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notif in
+          let value = notif.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
+          let height = value.height
+          let bottomInset = UIApplication.shared.windows.first?.safeAreaInsets.bottom
+          self.offset = height - (bottomInset ?? 0)
+        }
+
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { notif in
+          self.offset = 0
         }
     }
+  }
+}
+
+extension View {
+  func keyboardResponsive() -> ModifiedContent<Self, KeyboardResponsiveModifier> {
+    return modifier(KeyboardResponsiveModifier())
+  }
 }
 
 struct ChatView: View {
-    
-    @ObservedObject private var kGuardian = KeyboardGuardian //KeyboardGuardian(textFieldCount: 1)
     
     var name : String
     var pic : String
@@ -351,8 +362,7 @@ struct ChatView: View {
                 
                 TextField("Enter Message", text: self.$txt)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .background(GeometryGetter(rect: $kGuardian.rects[0]))
-                
+                    
                 Button(action: {
                     
                     sendMsg(user: self.name, uid: self.uid, pic: self.pic, date: Date() , msg: self.txt)
@@ -362,7 +372,7 @@ struct ChatView: View {
                     Text("Send")
                 }
                 
-            }.offset(y: kGuardian.slide).animation(.easeInOut(duration: 1.0))
+            }.keyboardResponsive()
             
             .navigationBarTitle("\(name)", displayMode: .inline)
             .navigationBarItems(leading:
@@ -396,9 +406,11 @@ struct ChatView: View {
                 self.nomsg = true
             }
             
+            
             for i in snap!.documentChanges{
                 
                 if i.type == .added{
+                    
                     let id = i.document.documentID
                     let msg = i.document.get("msg") as! String
                     let user = i.document.get("user") as! String
